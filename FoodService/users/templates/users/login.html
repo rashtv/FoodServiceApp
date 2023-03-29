@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form action="{% url 'users:login' %}" method="post">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.username.id_for_label }}">Имя пользователя</label>
+            {{ form.username }}
+        </div>
+        <div>
+            <label for="{{ form.password.id_for_label }}">Пароль</label>
+            {{ form.password }}
+        </div>
+
+        <div>
+            <a href="#">Забыли пароль?</a>
+            <input type="submit" value="Авторизоваться">
+        </div>
+        <div>
+            <a href="#">
+                <i style="color: #d9503e;"></i>
+            </a>
+            <a href="#">
+                <i style="color: #4a658b;"></i>
+            </a>
+            <a href="#">
+                <i style="color: #303030;"></i>
+            </a>
+            <a href="#">
+                <i style="color: #405794;"></i>
+            </a>
+        </div>
+    </form>
+</body>
+</html>
