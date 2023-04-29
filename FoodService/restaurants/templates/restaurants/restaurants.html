@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <ul>
+    {% for restaurant in restaurants %}
+        <li>
+            <h3><a href="{% url 'restaurants:restaurant' restaurant.id %}">{{ restaurant.name }}</a></h3>
+            <p>{{ restaurant.address }}</p>
+            <p>{{ restaurant.description }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

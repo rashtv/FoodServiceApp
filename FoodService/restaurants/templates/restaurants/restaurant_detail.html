@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div>
+        <h3>{{ restaurant.name }}</h3>
+        <p>{{ restaurant.address }}</p>
+        <p>{{ restaurant.description }}</p>
+    </div>
+    <div>
+        <h4>Menu</h4>
+        <ul>
+            {% for dish in menu %}
+            <li>
+                <h5>{{ dish.name }}</h5>
+                <p>{{ dish.price }}</p>
+                <p>{{ dish.description }}</p>
+                <p>{{ dish.image }}</p>
+                <p>{{ dish.category }}</p>
+                <p>{{ dish.restaurant }}</p>
+            </li>
+            {% endfor %}
+            <a href="javascript:alert('Food in the cart!');"><button>Add</button></a>
+            <a href="{% url 'restaurants:restaurants' %}"><button>Back</button></a>
+        </ul>
+    </div>
+</body>
+</html>

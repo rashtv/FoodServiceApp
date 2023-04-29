@@ -1,6 +1,7 @@
 from django.db import models
 # from ..users.models import User
 import sys
+
 sys.path.append('C:/MyFiles/KBTU_docs/sem_6/Django/FinalProject/FoodService/users')
 from users.models import User
 
