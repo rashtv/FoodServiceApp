@@ -6,7 +6,15 @@ sys.path.append('C:/MyFiles/KBTU_docs/sem_6/Django/FinalProject/FoodService/user
 from users.models import User
 
 
-class Category(models.Model):
+class RestaurantCategory(models.Model):
+    name = models.CharField(max_length=256)
+    description = models.TextField(max_length=1024)
+
+    def __str__(self):
+        return self.name
+
+
+class FoodCategory(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField(max_length=1024)
 
@@ -18,6 +26,8 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=256)
     address = models.CharField(max_length=256)
     description = models.TextField(max_length=1024)
+    category = models.ForeignKey(to=RestaurantCategory, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='restaurant_image', null=True)
 
     def __str__(self):
         return self.name
@@ -28,7 +38,7 @@ class Food(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(max_length=1024)
     image = models.ImageField(upload_to='food_image')
-    category = models.ForeignKey(to=Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(to=FoodCategory, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(to=Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):
