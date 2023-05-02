@@ -4,7 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from .models import Category, Restaurant, Food
+from .models import FoodCategory, RestaurantCategory, Restaurant, Food
 
 
 def index(request):
@@ -14,19 +14,19 @@ def index(request):
 
 def restaurants(request, category_id=None):
     if category_id:
-        category = Category.objects.get(id=category_id)
-        restaurants = Restaurant.objects.filter(category=category)
+        category = RestaurantCategory.objects.get(id=category_id)
+        restaurant_list = Restaurant.objects.filter(category=category)
     else:
-        restaurants = Restaurant.objects.all()
+        restaurant_list = Restaurant.objects.all()
 
-    p = Paginator(restaurants, 6)
+    p = Paginator(restaurant_list, 6)
     page_number = request.GET.get('page')
     page_obj = p.get_page(page_number)
 
     context = {
         'title': "FoodService - Restaurants",
-        'restaurants': restaurants,
-        'categories': Category.objects.all(),
+        'restaurants': restaurant_list,
+        'categories': RestaurantCategory.objects.all(),
         'page_obj': page_obj,
     }
 
