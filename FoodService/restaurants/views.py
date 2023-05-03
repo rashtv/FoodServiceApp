@@ -37,9 +37,17 @@ def restaurant_details(request, restaurant_id):
     restaurant = Restaurant.objects.get(id=restaurant_id)
     restaurant_menu = Food.objects.filter(restaurant=restaurant)
 
+    restaurant_list = Restaurant.objects.all()
+    p = Paginator(restaurant_list, 6)
+    page_number = request.GET.get('page')
+    page_obj = p.get_page(page_number)
+
     context = {
         'title': "FoodService - Restaurant Details",
         'restaurant': restaurant,
         'menu': restaurant_menu,
+        'restaurants': restaurant_list,
+        'page_obj': page_obj,
+
     }
     return render(request, 'restaurants/restaurant_detail.html', context)
