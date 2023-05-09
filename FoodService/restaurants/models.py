@@ -56,8 +56,6 @@ class BasketItem(models.Model):
     def sum(self):
         return self.food.price * self.quantity
 
-    def get_restaurant(self):
-        return self.food.restaurant
 
 class Order(models.Model):
     restaurant = models.ForeignKey(to=Restaurant, on_delete=models.CASCADE)
