@@ -53,6 +53,11 @@ class BasketItem(models.Model):
     def __str__(self):
         return f"Корзина товаров для {self.user.username}"
 
+    def sum(self):
+        return self.food.price * self.quantity
+
+    def get_restaurant(self):
+        return self.food.restaurant
 
 class Order(models.Model):
     restaurant = models.ForeignKey(to=Restaurant, on_delete=models.CASCADE)

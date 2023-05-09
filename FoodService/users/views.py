@@ -4,6 +4,11 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
+import sys
+
+sys.path.append('C:/MyFiles/KBTU_docs/sem_6/Django/FinalProject/FoodService/restaurants')
+from restaurants.models import BasketItem
+
 
 def login(request):
     if request.method == 'POST':
@@ -49,7 +54,19 @@ def profile(request):
             return HttpResponseRedirect(reverse('users:profile'))
     else:
         form = UserProfileForm(instance=request.user)
+
+    basket_items = BasketItem.objects.filter(user=request.user)
+
+    total_sum = 0
+    total_quantity = 0
+    for basket_item in basket_items:
+        total_sum += basket_item.sum()
+        total_quantity += basket_item.quantity
+
     context = {'title': "FoodService - Профиль",
                'form': form,
+               'basket_items': basket_items,
+               'total_sum': total_sum,
+               'total_quantity': total_quantity,
                }
     return render(request, 'users/profile.html', context)

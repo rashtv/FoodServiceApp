@@ -4,7 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from .models import FoodCategory, RestaurantCategory, Restaurant, Food
+from .models import FoodCategory, RestaurantCategory, Restaurant, Food, BasketItem, Order
 
 
 def index(request):
@@ -37,11 +37,6 @@ def restaurant_details(request, restaurant_id):
     restaurant = Restaurant.objects.get(id=restaurant_id)
     restaurant_menu = Food.objects.filter(restaurant=restaurant)
 
-    restaurant_list = Restaurant.objects.all()
-    p = Paginator(restaurant_menu, 6)
-    page_number = request.GET.get('page')
-    page_obj = p.get_page(page_number)
-
     drink_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=1))
     dessert_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=2))
     pizza_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=3))
@@ -55,8 +50,6 @@ def restaurant_details(request, restaurant_id):
         'title': "FoodService - Restaurant Details",
         'restaurant': restaurant,
         'menu': restaurant_menu,
-        'restaurants': restaurant_list,
-        'page_obj': page_obj,
 
         'drink_list': drink_list,
         'dessert_list': dessert_list,
@@ -66,6 +59,41 @@ def restaurant_details(request, restaurant_id):
         'sushi_list': sushi_list,
         'doner_list': doner_list,
         'hot_dishes_list': hot_dishes_list,
-
     }
     return render(request, 'restaurants/restaurant_detail.html', context)
+
+
+@login_required
+def basket_item_add(request, product_id):
+    food = Food.objects.get(id=product_id)
+    basket_items = BasketItem.objects.filter(user=request.user, food=food)
+
+    if not basket_items.exists():
+        BasketItem.objects.create(user=request.user, food=food, quantity=1)
+    else:
+        basket_item = basket_items.first()
+        basket_item.quantity += 1
+        basket_item.save()
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def basket_item_remove(request, basket_item_id):
+    basket_item = BasketItem.objects.get(id=basket_item_id)
+    basket_item.delete()
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+
+@login_required
+def make_order(request):
+    basket_items = BasketItem.objects.filter(user=request.user)
+    restaurant = basket_items.first().food.restaurant
+    d = dict()
+
+    for basket_item in basket_items:
+        food = basket_item.food.name
+        d[food] = basket_item.quantity
+        basket_item.delete()
+
+    Order.objects.create(restaurant=restaurant, user=request.user, items=d, isConfirmed=True)
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
