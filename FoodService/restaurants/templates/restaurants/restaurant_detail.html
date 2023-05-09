@@ -67,49 +67,40 @@
 <div class="container">
 
     <div class="row">
-        <div style="width: 100%; margin-top: 2%">
-            <h3>{{ restaurant.name }}</h3>
-            <p>Адрес: {{ restaurant.address }}</p>
-            <p>Описание: {{ restaurant.description }}</p>
+        <div style="width: 100%; margin-top: 40px;">
+            <h3 style="float: left; font-size:40px; font-weight:bold; text-decoration: underline">{{ restaurant.name }}</h3>
+            <div style="margin-left: 800px; color: gray; font-size: 10px; font-family: sans-serif">
+                <p>Адрес: {{ restaurant.address }}</p>
+                <p>Описание: {{ restaurant.description }}</p>
+            </div>
+
         </div>
 
         <div style="width: 100%; margin-bottom: 15px">
-            <h4>Menu</h4>
+            <h4 style="font-size: 72px; font-weight: 400; text-align: center;">Menu</h4>
         </div>
 
-<!--        <ul>-->
-<!--            {% for dish in menu %}-->
-<!--            <li>-->
-<!--                <h5>{{ dish.name }}</h5>-->
-<!--                <p>{{ dish.price }}</p>-->
-<!--                <p>{{ dish.description }}</p>-->
-<!--                <p>{{ dish.image }}</p>-->
-<!--                <p>{{ dish.category }}</p>-->
-<!--                <p>{{ dish.restaurant }}</p>-->
-<!--            </li>-->
-<!--            {% endfor %}-->
-<!--            <a href="javascript:alert('Food in the cart!');"><button>Add</button></a>-->
-<!--            <a href="{% url 'restaurants:restaurants' %}"><button>Back</button></a>-->
-<!--        </ul>-->
-
+        {% if hot_dishes_list %}
         <div class="col-lg-9">
-            <div class="row" style="width: 140%">
-                {% for restaurant in page_obj %}
+            <h4>Hot Dishes</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in hot_dishes_list %}
                 <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
                     <div class="card h-100">
                         <a href="#">
                             <img class="card-img-top"
-                                 src={{restaurant.image.url}}
+                                 src={{dish.image.url}}
                                  alt="">
                         </a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">{{restaurant.name}}</a>
+                                <a href="#">{{dish.name}}</a>
                             </h4>
-                            <p class="card-text">"{{restaurant.description}}"</p>
+                            <p class="card-text">"{{dish.description}}"</p>
                         </div>
                         <div class="card-footer text-center">
-                            <a type="button" class="btn btn-outline-success"
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
                                href="javascript:alert('Food in the cart!');">
                                 Добавить</a>
                         </div>
@@ -117,35 +108,227 @@
                 </div>
                 {% endfor %}
             </div>
-
-
-
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    {% if not page_obj.has_previous %}
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                    {% endif %}
-                    {% if page_obj.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                    {% endif %}
-
-                    {% if not page_obj.has_next %}
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                    {% endif %}
-                    {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
         </div>
+        {% endif %}
+
+        {% if doner_list %}
+        <div class="col-lg-9">
+            <h4>Doners</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in doner_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if sushi_list %}
+        <div class="col-lg-9">
+            <h4>Sushi</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in sushi_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if chicken_list %}
+        <div class="col-lg-9">
+            <h4>Chicken</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in chicken_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if burger_list %}
+        <div class="col-lg-9">
+            <h4>Burgers</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in burger_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if pizza_list %}
+        <div class="col-lg-9">
+            <h4>Pizzas</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in pizza_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if dessert_list %}
+        <div class="col-lg-9">
+            <h4>Desserts</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in dessert_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if drink_list %}
+        <div class="col-lg-9">
+            <h4>Drinks</h4>
+            <div class="row" style="width: 140%; margin-top: 35px">
+                {% for dish in drink_list %}
+                <div class="col-lg-4 col-md-6 mb-4" style="background-color; padding: 6px; margin-top: -23px">
+                    <div class="card h-100">
+                        <a href="#">
+                            <img class="card-img-top"
+                                 src={{dish.image.url}}
+                                 alt="">
+                        </a>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a href="#">{{dish.name}}</a>
+                            </h4>
+                            <p class="card-text">"{{dish.description}}"</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <span style="float: left; font-size: 24px; font-weight: 500;">{{dish.price}} KZT </span>
+                            <a type="button" class="btn btn-outline-success" style="float: right;"
+                               href="javascript:alert('Food in the cart!');">
+                                Добавить</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+
     </div>
 </div>
 <!-- /.container -->

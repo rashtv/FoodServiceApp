@@ -38,9 +38,18 @@ def restaurant_details(request, restaurant_id):
     restaurant_menu = Food.objects.filter(restaurant=restaurant)
 
     restaurant_list = Restaurant.objects.all()
-    p = Paginator(restaurant_list, 6)
+    p = Paginator(restaurant_menu, 6)
     page_number = request.GET.get('page')
     page_obj = p.get_page(page_number)
+
+    drink_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=1))
+    dessert_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=2))
+    pizza_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=3))
+    burger_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=4))
+    chicken_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=5))
+    sushi_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=6))
+    doner_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=7))
+    hot_dishes_list = restaurant_menu.filter(category=FoodCategory.objects.get(id=8))
 
     context = {
         'title': "FoodService - Restaurant Details",
@@ -48,6 +57,15 @@ def restaurant_details(request, restaurant_id):
         'menu': restaurant_menu,
         'restaurants': restaurant_list,
         'page_obj': page_obj,
+
+        'drink_list': drink_list,
+        'dessert_list': dessert_list,
+        'pizza_list': pizza_list,
+        'burger_list': burger_list,
+        'chicken_list': chicken_list,
+        'sushi_list': sushi_list,
+        'doner_list': doner_list,
+        'hot_dishes_list': hot_dishes_list,
 
     }
     return render(request, 'restaurants/restaurant_detail.html', context)

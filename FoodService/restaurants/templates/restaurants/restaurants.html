@@ -113,14 +113,14 @@
                 {% for restaurant in page_obj %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="#">
+                        <a href="{% url 'restaurants:restaurant' restaurant.id %}">
                             <img class="card-img-top"
                                  src={{restaurant.image.url}}
                                  alt="">
                         </a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">{{restaurant.name}}</a>
+                                <a href="{% url 'restaurants:restaurant' restaurant.id %}">{{restaurant.name}}</a>
                             </h4>
                             <p class="card-text">"{{restaurant.description}}"</p>
                         </div>
