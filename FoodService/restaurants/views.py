@@ -4,7 +4,7 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from .models import FoodCategory, RestaurantCategory, Restaurant, Food, BasketItem, Order
+from .models import FoodCategory, RestaurantCategory, Restaurant, Food, BasketItem, Order, OrderDetails
 
 
 def index(request):
@@ -64,6 +64,24 @@ def restaurant_details(request, restaurant_id):
 
 
 @login_required
+def basket(request):
+    basket_items = BasketItem.objects.filter(user=request.user)
+
+    total_sum = 0
+    total_quantity = 0
+    for basket_item in basket_items:
+        total_sum += basket_item.sum()
+        total_quantity += basket_item.quantity
+
+    context = {'title': "FoodService - Корзина",
+               'basket_items': basket_items,
+               'total_sum': total_sum,
+               'total_quantity': total_quantity,
+               }
+
+    return render(request, 'restaurants/basket.html', context)
+
+@login_required
 def basket_item_add(request, product_id):
     food = Food.objects.get(id=product_id)
     basket_items = BasketItem.objects.filter(user=request.user, food=food)
@@ -85,15 +103,35 @@ def basket_item_remove(request, basket_item_id):
 
 
 @login_required
+def orders(request):
+    order_list = Order.objects.filter(user=request.user)
+    context = {
+        'title': "FoodService - Заказы",
+        'orders': order_list,
+    }
+    return render(request, 'restaurants/orders.html', context)
+
+
+@login_required
+def order_details(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order_details_list = OrderDetails.objects.filter(order=order_id)
+    context = {
+        'title': "FoodService - Детали Заказа",
+        'order': order,
+        'order_details_list': order_details_list,
+    }
+    return render(request, 'restaurants/order_detail.html', context)
+
+
+@login_required
 def make_order(request):
     basket_items = BasketItem.objects.filter(user=request.user)
-    restaurant = basket_items.first().food.restaurant
-    d = dict()
+
+    order = Order.objects.create(user=request.user, isConfirmed=True)
 
     for basket_item in basket_items:
-        food = basket_item.food.name
-        d[food] = basket_item.quantity
+        OrderDetails.objects.create(food=basket_item.food, order=order, quantity=basket_item.quantity)
         basket_item.delete()
 
-    Order.objects.create(restaurant=restaurant, user=request.user, items=d, isConfirmed=True)
     return HttpResponseRedirect(request.META['HTTP_REFERER'])

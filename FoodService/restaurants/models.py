@@ -58,9 +58,9 @@ class BasketItem(models.Model):
 
 
 class Order(models.Model):
-    restaurant = models.ForeignKey(to=Restaurant, on_delete=models.CASCADE)
+    # restaurant = models.ForeignKey(to=Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    items = models.TextField(max_length=1024)
+    # items = models.TextField(max_length=1024)
     created_timestamp = models.DateTimeField(auto_now_add=True)
 
     isConfirmed = models.BooleanField(default=False)
@@ -70,3 +70,22 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Заказ товаров для {self.user.username}"
+
+    def get_price(self):
+        price = 0
+        order_details = OrderDetails.objects.filter(order=self)
+        for order_detail in order_details:
+            price += order_detail.food.price
+        return price
+
+
+class OrderDetails(models.Model):
+    food = models.ForeignKey(to=Food, on_delete=models.CASCADE)
+    order = models.ForeignKey(to=Order, on_delete=models.CASCADE)
+    quantity = models.PositiveSmallIntegerField(default=0)
+
+    def __str__(self):
+        return f"Детали для заказа {self.order.id}"
+
+    def get_price(self):
+        return self.food.price * self.quantity

@@ -8,14 +8,15 @@
     <meta name="author" content="">
     <title>{{ title }}</title>
 
+    <link rel="icon" href="{% static 'vendor/img/favicon-32x32.png' %}">
+
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{% static 'vendor/css/profile.css' %}" rel="stylesheet">
 </head>
-<body class="bg-light">
-<!-- Navigation -->
+<body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="{% url 'restaurants:index' %}">FoodService</a>
@@ -60,63 +61,71 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-7">
-            <h4 class="mt-3 mb-3">Профиль</h4>
-            <div class="col-lg-12 text-center">
-                <img width="100" height="100"
-                     src="{% if user.image %}
-                            {{ user.image.url }}
-                          {% else %}
-                            {% static 'vendor/img/users/default_avatar.jpg' %}
-                          {% endif %}"
-
-                     class="img-thumbnail">
+<section>
+    <div class="container pt-5">
+        <div class="text-center mt-5">
+            <h1>Заказы</h1>
+            <div class="orders mt-5">
+                <table class="table">
+                    <thead>
+                    <tr class="table-light">
+                        <th scope="col">#</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Date of Creation</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                    {% if order.isCompleted %}
+                    <tr class="table-success">
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Completed</td>
+                        <td>{{ order.created_timestamp }}</td>
+                        <td>{{ order.get_price }} KZT</td>
+                        <td>
+                            <a href="{% url 'restaurants:order_details' order.id %}">Look for Details</a>
+                        </td>
+                    </tr>
+                    {% elif order.isDelivered %}
+                    <tr class="table-info">
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Being Delivered</td>
+                        <td>{{ order.created_timestamp }}</td>
+                        <td>{{ order.get_price }} KZT</td>
+                        <td>
+                            <a href="{% url 'restaurants:order_details' order.id %}">Look for Details</a>
+                        </td>
+                    </tr>
+                    {% elif order.isCooked %}
+                    <tr class="table-info">
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Being Prepared</td>
+                        <td>{{ order.created_timestamp }}</td>
+                        <td>{{ order.get_price }} KZT</td>
+                        <td>
+                            <a href="{% url 'restaurants:order_details' order.id %}">Look for Details</a>
+                        </td>
+                    </tr>
+                    {% elif order.isConfirmed %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>Accepted</td>
+                        <td>{{ order.created_timestamp }}</td>
+                        <td>{{ order.get_price }} KZT</td>
+                        <td>
+                            <a href="{% url 'restaurants:order_details' order.id %}">Look for Details</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <form action="{% url 'users:profile' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label class="small mb-1" for="{form.first_name.id_for_label}">Имя</label>
-                            {{ form.first_name }}
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label class="small mb-1" for="{form.last_name.id_for_label}">Фамилия</label>
-                            {{ form.last_name }}
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row mb-2">
-                    <div class="col-lg-12">
-                        <div class="custom-file">
-                            {{ form.image }}
-                            <label class="custom-file-label" for="{form.image.id_for_label}">Выберите изображение</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-6">
-                        <label class="small mb-1" for="{form.username.id_for_label}">Имя пользователя</label>
-                        {{ form.username }}
-                    </div>
-                    <div class="col-lg-6">
-                        <label class="small mb-1" for="{form.phone_number.id_for_label}">Номер телефона</label>
-                        {{ form.phone_number }}
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-lg-12" style="margin-top: 33px;">
-                        <input class="btn btn-info btn-block" type="submit" value="Сохранить">
-                    </div>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
@@ -127,5 +136,6 @@
 
 <!-- FontAwesome script -->
 <script src="{% static 'vendor/fontawesome/fontawesome-icons.js' %}" crossorigin="anonymous"></script>
+
 </body>
 </html>
