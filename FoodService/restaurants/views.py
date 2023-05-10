@@ -1,8 +1,9 @@
+from datetime import datetime, tzinfo, timezone
+from time import strptime
+
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, HttpResponseRedirect
-from django.contrib import auth
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 
 from .models import FoodCategory, RestaurantCategory, Restaurant, Food, BasketItem, Order, OrderDetails
 
@@ -105,6 +106,19 @@ def basket_item_remove(request, basket_item_id):
 @login_required
 def orders(request):
     order_list = Order.objects.filter(user=request.user)
+
+    for order in order_list:
+        seconds = (datetime.now().replace(tzinfo=timezone.utc) -
+                   order.created_timestamp.replace(tzinfo=timezone.utc)).seconds - 21600
+
+        if seconds >= 30:
+            order.isCompleted = True
+        elif seconds >= 20:
+            order.isDelivered = True
+        elif seconds >= 10:
+            order.isCooked = True
+        order.save()
+
     context = {
         'title': "FoodService - Заказы",
         'orders': order_list,
